@@ -1,14 +1,36 @@
+#include <stdio.h>
+#include <ctype.h> // For isdigit()
+#include <math.h>  // For pow()
+#include <string.h> // For strlen()
+#include<stdlib.h>
+
+#define MAXSIZE 100
+
 typedef struct stack {
-  char stack[MAXSIZE];
+  int stack[MAXSIZE];
   int Top;
 } NODE;
 
+void push(NODE *pu, int item) {
+  if (pu->Top == MAXSIZE - 1) {
+    printf("\nThe Stack Is Full");
+  } else {
+    pu->Top++;
+    pu->stack[pu->Top] = item;
+  }
+}
 
+int pop(NODE *po) {
+  int item;
+  if (po->Top == -1) {
+    printf("\nThe Stack Is Empty. Invalid Postfix expression");
+    return -1; // Indicate error (optional)
+  } else {
+    item = po->stack[po->Top--];
+  }
+  return item;
+}
 
-
-
-#include <stdio.h>
-#include <stdlib.h>
 int Postfix_Eval(char postfix[]) {
   int a, b, temp, len;
   NODE *ps = (NODE *)malloc(sizeof(NODE)); // Allocate memory for the stack
@@ -22,11 +44,11 @@ int Postfix_Eval(char postfix[]) {
     } else {
       // Pop the top two operands for operation
       a = pop(ps);
-      if (a == -1) { // Check for pop error
+      if (a == -1) { // Check for pop error (optional)
         return -1; // Indicate error
       }
       b = pop(ps);
-      if (b == -1) { // Check for pop error
+      if (b == -1) { // Check for pop error (optional)
         return -1; // Indicate error
       }
       switch (postfix[i]) {
@@ -66,79 +88,31 @@ int Postfix_Eval(char postfix[]) {
 
   if (ps->Top != 0) {
     printf("\nInvalid postfix expression (extra operands)\n");
-    return -1; // Indicate error
+    return -1; // Indicate error (optional)
   }
 
   return pop(ps);
 }
-int main()
-{
-    printf("Hello world!\n");
-    return 0;
-}
-int prec(char symbol) {
-  switch (symbol) {
-    case '(':
-      return 1;
-    case ')':
-      return 2;
-    case '+':
-    case '-':
-      return 3;
-    case '*':
-    case '/':
-    case '%':
-      return 4;
-    case '^':
-      return 5;
-    default:
-      return 0;
-  }
-}
-void Infix_Postfix(char infix[]) {
-  int len = strlen(infix);
-  char postfix[MAXSIZE], ch;
 
-  // Allocate memory for the stack
-  NODE *ps = (NODE *)malloc(sizeof(NODE));
-  ps->Top = -1;
+int main() {
+  char choice, postfix[MAXSIZE];
+  NODE *ps; // Declare ps within main
 
-  // Add ending parenthesis
-  infix[len++] = ')';
-  push(ps, '(');
+  do {
+    printf("\nEnter the Postfix expression = ");
+    scanf("%s", postfix);
 
-  for (int i = 0, j = 0; i < len; i++) {
-    switch (prec(infix[i])) {
-      case 1:
-        push(ps, infix[i]);
-        break;
-      case 2:
-        ch = pop(ps);
-        while (ch != '(') {
-          postfix[j++] = ch;
-          ch = pop(ps);
-        }
-        break;
-      case 3:
-      case 4:
-      case 5:
-        ch = pop(ps);
-        while (prec(ch) >= prec(infix[i])) {
-          postfix[j++] = ch;
-          ch = pop(ps);
-        }
-        push(ps, ch);
-        push(ps, infix[i]);
-        break;
-      default:
-        postfix[j++] = infix[i];
-        break;
+    int result = Postfix_Eval(postfix);
+    if (result != -1) {
+      printf("\nThe postfix evaluation is = %d\n", result);
     }
-  }
 
-  // Free allocated memory for the stack
-  free(ps);
+    printf("\nDo you want to continue (Y/y) = ");
+    fflush(stdin);
+    scanf(" %c", &choice); // Use space before %c to consume newline
+  } while (choice == 'Y' || choice == 'y');
 
-  printf("\nThe Postfix expression is = ");
-  printf("%s\n", postfix); // Use strlen(postfix) for safety
+  free(ps); // Deallocate memory for the stack
+
+  return 0;
 }
