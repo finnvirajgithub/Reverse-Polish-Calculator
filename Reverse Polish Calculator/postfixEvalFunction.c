@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 int Postfix_Eval(char postfix[]) {
   int a, b, temp, len;
   NODE *ps = (NODE *)malloc(sizeof(NODE)); // Allocate memory for the stack
@@ -13,11 +11,11 @@ int Postfix_Eval(char postfix[]) {
     } else {
       // Pop the top two operands for operation
       a = pop(ps);
-      if (a == -1) { // Check for pop error
+      if (a == -1) { // Check for pop error (optional)
         return -1; // Indicate error
       }
       b = pop(ps);
-      if (b == -1) { // Check for pop error
+      if (b == -1) { // Check for pop error (optional)
         return -1; // Indicate error
       }
       switch (postfix[i]) {
@@ -57,61 +55,8 @@ int Postfix_Eval(char postfix[]) {
 
   if (ps->Top != 0) {
     printf("\nInvalid postfix expression (extra operands)\n");
-    return -1; // Indicate error
+    return -1; // Indicate error (optional)
   }
 
   return pop(ps);
-}
-int main()
-{
-    printf("Hello world!\n");
-    return 0;
-}
-
-void Infix_Postfix(char infix[]) {
-  int len = strlen(infix);
-  char postfix[MAXSIZE], ch;
-
-  // Allocate memory for the stack
-  NODE *ps = (NODE *)malloc(sizeof(NODE));
-  ps->Top = -1;
-
-  // Add ending parenthesis
-  infix[len++] = ')';
-  push(ps, '(');
-
-  for (int i = 0, j = 0; i < len; i++) {
-    switch (prec(infix[i])) {
-      case 1:
-        push(ps, infix[i]);
-        break;
-      case 2:
-        ch = pop(ps);
-        while (ch != '(') {
-          postfix[j++] = ch;
-          ch = pop(ps);
-        }
-        break;
-      case 3:
-      case 4:
-      case 5:
-        ch = pop(ps);
-        while (prec(ch) >= prec(infix[i])) {
-          postfix[j++] = ch;
-          ch = pop(ps);
-        }
-        push(ps, ch);
-        push(ps, infix[i]);
-        break;
-      default:
-        postfix[j++] = infix[i];
-        break;
-    }
-  }
-
-  // Free allocated memory for the stack
-  free(ps);
-
-  printf("\nThe Postfix expression is = ");
-  printf("%s\n", postfix); // Use strlen(postfix) for safety
 }
