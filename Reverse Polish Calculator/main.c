@@ -1,3 +1,12 @@
+typedef struct stack {
+  char stack[MAXSIZE];
+  int Top;
+} NODE;
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 int Postfix_Eval(char postfix[]) {
