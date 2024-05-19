@@ -67,7 +67,25 @@ int main()
     printf("Hello world!\n");
     return 0;
 }
-
+int prec(char symbol) {
+  switch (symbol) {
+    case '(':
+      return 1;
+    case ')':
+      return 2;
+    case '+':
+    case '-':
+      return 3;
+    case '*':
+    case '/':
+    case '%':
+      return 4;
+    case '^':
+      return 5;
+    default:
+      return 0;
+  }
+}
 void Infix_Postfix(char infix[]) {
   int len = strlen(infix);
   char postfix[MAXSIZE], ch;
