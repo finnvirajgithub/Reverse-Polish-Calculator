@@ -1,6 +1,3 @@
-// Y.M.D.Bandara
-
-
 #include <stdio.h>
 #include <stdlib.h> // For malloc and free
 #include <string.h>  // For strlen
